@@ -1,4 +1,4 @@
-class Day1 {
+class Day2 {
 
     companion object {
         private val day = 1
