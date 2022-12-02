@@ -2,7 +2,7 @@ class Day1 {
 
     companion object {
         private val day = 1
-        val data = DataSource.getDataAsList(1)
+        val data = DataSource.getDataAsList(day)
 
         // fairly straightforward summing of all values to see which one is hte highest.
         fun puzzleA() {
