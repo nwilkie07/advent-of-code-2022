@@ -2,40 +2,36 @@ class Day1 {
 
     companion object {
         private val day = 1
-        val data = DataSource.getDataAsList(day)
-
-        // fairly straightforward summing of all values to see which one is hte highest.
+        val data = DataSource.getDataAsList(1)
         fun puzzleA() {
-            var max = 0
-            var current = 0
-            for (line in data) {
-                if (line == "") {
-                    if (current > max) {
-                        max = current
-                    }
-                    current = 0
+            var elf = 0
+            var high = 0
+            for (a in data) {
+                if (a != "") {
+                    elf += a.toInt()
                 } else {
-                    current += line.toInt()
+                    if (elf > high) {
+                        high = elf
+                    }
+                    elf = 0
                 }
             }
-
-            println(max)
+            println(high)
         }
 
-        // straightforward summing and storing each elf's calories and then sorting the list to find the top 3.
         fun puzzleB() {
-            val totals = mutableListOf<Int>()
-            var current = 0
-            for (line in data) {
-                if (line == "") {
-                    totals.add(current)
-                    current = 0
+            var elf = 0
+            var high = mutableListOf<Int>()
+            for (a in data) {
+                if (a != "") {
+                    elf += a.toInt()
                 } else {
-                    current += line.toInt()
+                    high.add(elf)
+                    elf = 0
                 }
             }
-            totals.sortDescending()
-            println(totals.take(3).sum())
+            high.sortDescending()
+            println(high.take(3).sum())
         }
     }
 }

@@ -8,7 +8,7 @@ private const val urlSuffix = "/input"
 private const val cookieHeaderKey = "cookie"
 
 // set this in your env settings based on the cookie from the website, so you can get your personal data.
-private const val cookieEnvVariable = "AOC2022-cookie"
+private const val cookieEnvVariable = "cookie"
 
 class DataSource {
     companion object {
