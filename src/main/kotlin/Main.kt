@@ -9,6 +9,7 @@ fun main() {
 //        Day4.puzzleB()
 //        Day5.puzzleA()
 //        Day6.puzzleA()
+//        Day7.puzzleA()
         Day8.puzzleA()
     }
     println("(The execution took $timeInMillis ms)")

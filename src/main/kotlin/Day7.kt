@@ -1,9 +1,13 @@
-class Day7 {
+import com.sun.source.tree.Tree
+import java.util.StringJoiner
 
+class Day7 {
     companion object {
         private val day = 7
         val data = DataSource.getDataAsList(7)
         var root = TreeNode(0, "root")
+        val diskSpace = 70000000
+        val requiredSpace = 30000000
         fun puzzleA() {
             for (line in data) {
                 val process = line.split(" ")
@@ -15,48 +19,110 @@ class Day7 {
                         "cd" -> {
                             when (process[2]) {
                                 ".." -> root = root.parent!!
-                                "/" -> {}
-                                else -> {
-                                    for (a in root.children) {
-                                        if (a.name == process[2]) {
-                                            root = a
-                                        }
-                                    }
+                                "/" -> {
+                                }
 
+                                else -> {
+                                    root = getNode(root, process[2])
                                 }
                             }
                         }
                     }
                 }
                 if (process[0].toIntOrNull() != null) {
-                    root.value += root.value + process[0].toInt()
+                    root.value = root.value + process[0].toInt()
                 }
                 if (process[0] == "dir") {
-                    if (process[1].toIntOrNull() != null) {
-                        root.value = process[1].toInt()
-                    } else {
-                        if (!root.children.contains(TreeNode(0, process[1])))
-                            root.addChild(TreeNode(0, process[1]))
-                    }
+                    if (!contains(root, process[1]))
+                        root.addChild(TreeNode(0, process[1]))
 
                 }
             }
 
+//            println("root: ${root.name}")
             while (root.parent != null) {
                 root = root.parent!!
             }
-            printTree(root)
+            accumulateValues(root)
+            while (root.parent != null) {
+                root = root.parent!!
+            }
+            var totalUsage = root.value
+            println(totalUsage)
+            val freeSpace = diskSpace - totalUsage
+            val needToRemove = requiredSpace - freeSpace
+            println("Remove: $needToRemove")
+            
+            var dummyNode = TreeNode(1000000000, "dummy")
+            var deleteMe = getToDelete(root, needToRemove, dummyNode)
+//            printTree(root, 0)
+            println("${deleteMe.name} ${deleteMe.value}")
+
         }
 
-        fun printTree(t: TreeNode<String>) {
-            println(t.name)
-            if (t.value != 0) {
-                println(t.value)
+        fun printTree(t: TreeNode<String>, level: Int) {
+            var count = 0
+            var levelString = ""
+            while (count < level) {
+                levelString = "$levelString\t"
+                count++
             }
-
             for (child in t.children) {
-                printTree(child)
+                println("$levelString ${child.name} Size: ${child.value}")
+                printTree(child, level + 1)
             }
+        }
+
+        fun accumulateValues(t: TreeNode<String>): Int {
+            for (child in t.children) {
+//                println(child.value)
+                t.value += accumulateValues(child)
+            }
+            return t.value
+        }
+
+        fun getSum(t: TreeNode<String>): Int {
+            var result = 0
+            for (child in t.children) {
+                var temp = 0
+                if (child.value in 1..100000) {
+                    temp = child.value
+                }
+                result += temp + getSum(child)
+
+            }
+            return result
+        }
+
+        fun contains(t: TreeNode<String>, name: String): Boolean {
+            for (child in t.children) {
+                if (child.name == name) {
+                    return true
+                }
+            }
+            return false
+        }
+
+        fun getToDelete(t: TreeNode<String>, amount: Int, selected: TreeNode<String>): TreeNode<String> {
+            var current: TreeNode<String> = selected
+            for (child in t.children) {
+                 //WRONG: pwtqzwv 4131645
+                current = getToDelete(child, amount, current)
+                if (child.value >= amount && current.value >= child.value) {
+                    current = child
+                    println(child.value)
+                }
+            }
+            return current
+        }
+
+        fun getNode(t: TreeNode<String>, name: String): TreeNode<String> {
+            for (child in t.children) {
+                if (child.name == name) {
+                    return child
+                }
+            }
+            return t
         }
 
 

@@ -15,6 +15,7 @@ class DataSource {
         private val cookie = System.getenv(cookieEnvVariable)
 
         fun getDataAsList(day: Int): List<String> {
+            println(cookie)
             val url = "$urlPrefix$day$urlSuffix"
             val client = HttpClient.newBuilder().build()
             val request = HttpRequest.newBuilder()

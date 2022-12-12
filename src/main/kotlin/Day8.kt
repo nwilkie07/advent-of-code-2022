@@ -1,6 +1,3 @@
-import java.util.ArrayDeque
-
-
 class Day8 {
 
     companion object {
@@ -15,8 +12,8 @@ class Day8 {
             println(data.size)
             for (line in data) {
                 val split = line.split("")
-                var arr = IntArray(split.size - 2)
-                var expRow = BooleanArray(split.size - 2)
+                var arr = IntArray(split.size)
+                var expRow = BooleanArray(split.size)
                 x = 0
                 for (tree in split) {
                     if (tree != "") {
@@ -29,7 +26,7 @@ class Day8 {
 //                            println("x: $x y: $y")
                             expRow[x] = true
                             expCount++
-                            
+
                         } else {
                             expRow[x] = false
                         }
@@ -40,34 +37,46 @@ class Day8 {
                 exposed.add(expRow)
                 y++
             }
-            
+
             x = 1
             y = 1
-            var add = 1
-            var skip = 3
-            var exit = 1
-            while (y < heights.size - 2) {
-                while (exit < 3) {
-                    visible(x, y)
-                    x += heights[0].size - skip
-                    exit++
+            var innerCount = 0
+            var leftAdd = 1
+            var rightSubtract = 2
+            var exitCount = 1
+            println("Height Size ${heights.size}")
+            while (innerCount < (heights[0].size - 1) / 2) {
+                // Number of rounds to check tree
+                while (y < heights.size - 3) {
+                    //y-height progression
+                    while (exitCount < 3) {
+                        //x-width progression check
+                        println("X: $x Y: $y")
+                        visible(x, y)
+                        x = heights[0].size - rightSubtract
+                        exitCount++
+                    }
+                    if (rightSubtract == heights.size / 2) {
+                        exitCount = 2
+                    } else {
+                        exitCount = 1
+                    }
+                    
+                    x = leftAdd
+                    y++
                 }
-                add++
-                skip += 2
-                exit = 1
-                x = add
-                y++
-            }
-            for (element in heights[0]) {
-                print(element)
-            }
-            println("")
-            for (element in heights[1]) {
-                print(element)
+                y = 1
+                leftAdd++
+                rightSubtract++
+                x = leftAdd
+                innerCount++
             }
             println("")
             println(expCount)
+            println(heights[0].size)
         }
+        //guesses: 488, 423, 466, 468
+
 
         fun visible(x: Int, y: Int) {
             if (!exposed[y][x]) {
@@ -82,14 +91,14 @@ class Day8 {
                             expCount++
                             exposed[y][x] = true
                         }
-                    } 
+                    }
                 } else {
                     if (x >= heights[0].size / 2) {
                         if (right || up || down) {
                             expCount++
                             exposed[y][x] = true
                         }
-                    } 
+                    }
                 }
             }
         }
