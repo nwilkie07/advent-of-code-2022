@@ -11,31 +11,33 @@ class Day8 {
             var y = 0
             println(data.size)
             for (line in data) {
-                val split = line.split("")
-                var arr = IntArray(split.size)
-                var expRow = BooleanArray(split.size)
-                x = 0
-                for (tree in split) {
-                    if (tree != "") {
-                        arr[x] = tree.toInt()
-                        if (x == 0 ||
-                            y == 0 ||
-                            x == split.size - 3 ||
-                            y == split.size - 3
-                        ) {
+                if (line != "") {
+                    val split = line.split("")
+                    var arr = IntArray(split.size - 1)
+                    var expRow = BooleanArray(split.size - 1)
+                    x = 0
+                    for (tree in split) {
+                        if (tree != "") {
+                            arr[x] = tree.toInt()
+                            if (x == 0 ||
+                                y == 0 ||
+                                x == split.size - 3 ||
+                                y == split.size - 3
+                            ) {
 //                            println("x: $x y: $y")
-                            expRow[x] = true
-                            expCount++
+                                expRow[x] = true
+                                expCount++
 
-                        } else {
-                            expRow[x] = false
+                            } else {
+                                expRow[x] = false
+                            }
+                            x++
                         }
-                        x++
                     }
+                    heights.add(arr)
+                    exposed.add(expRow)
+                    y++
                 }
-                heights.add(arr)
-                exposed.add(expRow)
-                y++
             }
 
             x = 1
@@ -61,7 +63,7 @@ class Day8 {
                     } else {
                         exitCount = 1
                     }
-                    
+
                     x = leftAdd
                     y++
                 }
